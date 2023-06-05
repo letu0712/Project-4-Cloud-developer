@@ -14,7 +14,7 @@ import {
   Loader
 } from 'semantic-ui-react'
 
-import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
+import { createTodo, deleteTodo, getTodos, patchTodo, getTodosDone, getTodosNotDone } from '../api/todos-api'
 import Auth from '../auth/Auth'
 import { Todo } from '../types/Todo'
 
@@ -64,10 +64,32 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     try {
       await deleteTodo(this.props.auth.getIdToken(), todoId)
       this.setState({
-        todos: this.state.todos.filter(todo => todo.todoId !== todoId)
+        todos: this.state.todos.filter((todo) => todo.todoId !== todoId)
       })
     } catch {
       alert('Todo deletion failed')
+    }
+  }
+
+  onGetTodoDone = async () => {
+    try {
+      const todos = await getTodosDone(this.props.auth.getIdToken())
+      this.setState({
+        todos: todos
+      })
+    } catch {
+      alert('Todo Not found')
+    }
+  }
+
+  onGetTodoNotDone = async () => {
+    try {
+      const todos = await getTodosNotDone(this.props.auth.getIdToken())
+      this.setState({
+        todos: todos
+      })
+    } catch {
+      alert('Todo Not found')
     }
   }
 
@@ -132,6 +154,16 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
           />
         </Grid.Column>
         <Grid.Column width={16}>
+          <Button
+            icon
+            color="orange"
+            onClick={() => this.onGetTodoDone()}
+          >Get todo Done</Button>
+          <Button
+            icon
+            color="pink"
+            onClick={() => this.onGetTodoNotDone()}
+          >Get todo Not Done</Button>
           <Divider />
         </Grid.Column>
       </Grid.Row>

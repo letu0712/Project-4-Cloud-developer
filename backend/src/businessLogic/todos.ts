@@ -52,3 +52,13 @@ export async function createAttachmentPresignedUrl(todoId: string, userId: strin
 
     return attachmentUrl;
 }
+
+export async function getTodosDone(userId: string): Promise<any>{
+    logger.info('Get list todo done');
+    return await todoAccess.getTodosDone(userId);
+}
+
+export async function getTodosNotDone(userId: string): Promise<any>{
+    logger.info('Get list todo not done');
+    return await todoAccess.getTodosNotDone(userId);
+}

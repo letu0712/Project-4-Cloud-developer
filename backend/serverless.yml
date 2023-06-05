@@ -99,6 +99,51 @@ functions:
         Resource: 
           - '*'
 
+
+  GetTodosDone:
+    handler: src/lambda/http/getTodosDone.handler
+    events:
+      - http:
+          method: get
+          path: todos/done
+          cors: true
+          authorizer: Auth
+    iamRoleStatementsName: serverless-get-todo-done-role-${self:provider.stage}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
+        Resource: 
+          - '*'
+
+  GetTodosNotDone:
+    handler: src/lambda/http/getTodosNotDone.handler
+    events:
+      - http:
+          method: get
+          path: todos/notdone
+          cors: true
+          authorizer: Auth
+    iamRoleStatementsName: serverless-get-todo-not-done-role-${self:provider.stage}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
+        Resource: 
+          - '*'
+
   # TODO: Configure this function - 
   # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
   # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"

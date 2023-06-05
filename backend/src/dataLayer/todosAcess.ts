@@ -99,4 +99,38 @@ export class TodosAccess {
 
         return result.Attributes as TodoItem;
     }
+
+    async getTodosDone(userId: string): Promise<TodoItem[]> {
+        logger.debug('Getting all todos done');
+        
+        const params = {
+            TableName: this.todosTable,
+            KeyConditionExpression: 'userId = :userId',
+            FilterExpression: 'done = :done',
+            ExpressionAttributeValues: {
+                ':userId': userId,
+                ':done' : true,
+            }
+        }
+
+        const result = await docClient.query(params).promise();
+        return result.Items as TodoItem[];
+    }
+
+    async getTodosNotDone(userId: string): Promise<TodoItem[]> {
+        logger.debug('Getting all todos not done');
+        
+        const params = {
+            TableName: this.todosTable,
+            KeyConditionExpression: 'userId = :userId',
+            FilterExpression: 'done = :done',
+            ExpressionAttributeValues: {
+                ':userId': userId,
+                ':done' : false,
+            }
+        }
+
+        const result = await docClient.query(params).promise();
+        return result.Items as TodoItem[];
+    }
 }
